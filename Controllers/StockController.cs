@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StocksWebApi.Data;
+using StocksWebApi.Mappers;
 
 namespace StocksWebApi.Controllers
 {
@@ -19,7 +20,10 @@ namespace StocksWebApi.Controllers
         public async Task<IActionResult> GetAll()
         {
             var stocks = await _stockDBContext.Stocks.ToListAsync();
-            return Ok(stocks);
+
+            var stockDtos = stocks.Select(stock => stock.ToStockDto()).ToList();
+
+            return Ok(stockDtos);
         }
 
         [HttpGet("{id}")]
@@ -30,7 +34,7 @@ namespace StocksWebApi.Controllers
             {
                 return NotFound();
             }
-            return Ok(stock);
+            return Ok(stock.ToStockDto());
         }
     }
 }
