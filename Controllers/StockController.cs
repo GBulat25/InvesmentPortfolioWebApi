@@ -75,7 +75,19 @@ namespace StocksWebApi.Controllers
             stockModel.MarketCap = updateDto.MarketCap;
             await _stockDBContext.SaveChangesAsync(); 
             return Ok(stockModel.ToStockDto());
-
         } 
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
+        {
+            var stockModel= _stockDBContext.Stocks.FirstOrDefault(y => y.Id == id);
+            if(stockModel == null)
+            {
+                return NotFound();
+            }
+            _stockDBContext.Remove(stockModel);
+            await _stockDBContext.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }
