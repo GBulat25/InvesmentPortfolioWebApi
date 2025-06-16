@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StocksWebApi.Data;
+using StocksWebApi.DTOs.Stock;
 using StocksWebApi.Mappers;
 
 namespace StocksWebApi.Controllers
@@ -35,6 +36,23 @@ namespace StocksWebApi.Controllers
                 return NotFound();
             }
             return Ok(stock.ToStockDto());
+        }
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateStockReqDTO createStock)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var stockModel = createStock.ToCreateStockReqDto();
+            await _stockDBContext.Stocks.AddAsync(stockModel);
+            await _stockDBContext.SaveChangesAsync();
+
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = stockModel.Id },
+                stockModel.ToStockDto()
+            );
         }
     }
 }
