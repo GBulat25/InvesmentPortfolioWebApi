@@ -54,5 +54,28 @@ namespace StocksWebApi.Controllers
                 stockModel.ToStockDto()
             );
         }
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateStockReqDTO updateDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var stockModel = _stockDBContext.Stocks.FirstOrDefault(x => x.Id == id);
+            if (stockModel == null)
+            {
+                return NotFound();
+            }
+            stockModel.Symbol = updateDto.Symbol;
+            stockModel.CompanyName = updateDto.CompanyName;
+            stockModel.Price = updateDto.Price;
+            stockModel.Divs = updateDto.Divs;
+            stockModel.Industry = updateDto.Industry;
+            stockModel.MarketCap = updateDto.MarketCap;
+            await _stockDBContext.SaveChangesAsync(); 
+            return Ok(stockModel.ToStockDto());
+
+        } 
     }
 }
