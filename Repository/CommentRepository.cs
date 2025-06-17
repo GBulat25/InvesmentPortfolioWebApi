@@ -16,5 +16,11 @@ namespace StocksWebApi.Repository
         {
             return await _stockDBContext.Comments.ToListAsync();
         }
+
+        public async Task<Comment?> GetByIdAsync(Guid id)
+        {
+            return await _stockDBContext.Comments
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
     }
 }

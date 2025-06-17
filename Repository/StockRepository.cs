@@ -16,7 +16,7 @@ namespace StocksWebApi.Repository
             _stockDBContext = stockDBContext;
         }
         public async Task<List<Stock>> GetAllAsync() { 
-            return await _stockDBContext.Stocks.ToListAsync();
+            return await _stockDBContext.Stocks.Include(c=>c.Comments).ToListAsync();
         }
 
         public async Task<Stock> CreateAsync(Stock stockModel)
@@ -40,7 +40,7 @@ namespace StocksWebApi.Repository
 
         public async Task<Stock?> GetByIdAsync(Guid id)
         {
-            return await _stockDBContext.Stocks.FindAsync(id);
+            return await _stockDBContext.Stocks.Include(c => c.Comments).FirstOrDefaultAsync(i=>i.Id==id);
         }
 
         public async Task<Stock?> UpdateAsync(Guid id, UpdateStockReqDTO updateDto)

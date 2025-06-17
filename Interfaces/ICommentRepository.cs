@@ -4,6 +4,7 @@ namespace StocksWebApi.Interfaces
 {
     public interface ICommentRepository
     {
-        public Task<List<Comment>> GetAllAsync();
+        Task<List<Comment>> GetAllAsync();
+        Task<Comment?> GetByIdAsync(Guid id);
     }
 }

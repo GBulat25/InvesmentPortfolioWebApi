@@ -15,7 +15,8 @@ namespace StocksWebApi.Mappers
                 Price = stockModel.Price,
                 Divs = stockModel.Divs,
                 Industry = stockModel.Industry,
-                MarketCap = stockModel.MarketCap
+                MarketCap = stockModel.MarketCap,
+                Comments= stockModel.Comments.Select(c=> c.ToCommentDTO()).ToList()
             };
         }
         public static Stock ToCreateStockReqDto(this CreateStockReqDTO stockModel)

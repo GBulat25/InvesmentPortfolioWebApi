@@ -20,5 +20,15 @@ namespace StocksWebApi.Controllers
             var commentDtos = comments.Select(s => s.ToCommentDTO()).ToList();
             return Ok(commentDtos);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
+        {
+            var comment = await _commentRepo.GetByIdAsync(id);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+            return Ok(comment.ToCommentDTO());
+        }
     }
 }
