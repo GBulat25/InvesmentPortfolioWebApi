@@ -12,6 +12,14 @@ namespace StocksWebApi.Repository
         {
             _stockDBContext=stockDBContext;
         }
+
+        public async Task<Comment> CreateAsync(Comment commentModel)
+        {
+            await _stockDBContext.AddAsync(commentModel);
+            await _stockDBContext.SaveChangesAsync();
+            return commentModel;    
+        }
+
         public async Task<List<Comment>> GetAllAsync()
         {
             return await _stockDBContext.Comments.ToListAsync();

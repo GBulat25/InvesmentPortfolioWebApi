@@ -60,5 +60,10 @@ namespace StocksWebApi.Repository
             return stockModel;
 
         }
+
+        public async Task<bool> StockExists(Guid id)
+        {
+            return await _stockDBContext.Stocks.AnyAsync(s=>s.Id==id);
+        }
     }
 }
