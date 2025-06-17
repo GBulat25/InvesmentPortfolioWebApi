@@ -29,7 +29,7 @@ namespace StocksWebApi.Controllers
             return Ok(stockDtos);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:Guid}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var stock = await _stock_repo.GetByIdAsync(id);
@@ -56,7 +56,7 @@ namespace StocksWebApi.Controllers
             );
         }
         [HttpPut]
-        [Route("{id}")]
+        [Route("{id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateStockReqDTO updateDto)
         {
             if (!ModelState.IsValid)
@@ -66,18 +66,18 @@ namespace StocksWebApi.Controllers
             var stockModel = await _stock_repo.UpdateAsync(id, updateDto);
             if (stockModel == null)
             {
-                return NotFound();
+                return NotFound("Stock not exist");
             } 
             return Ok(stockModel.ToStockDto());
         } 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("{id:Guid}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var stockModel=await _stock_repo.DeleteByIdAsync(id);
             if(stockModel == null)
             {
-                return NotFound();
+                return NotFound("Stock not exist");
             }
             
             return NoContent();
