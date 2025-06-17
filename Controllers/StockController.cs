@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using StocksWebApi.Data;
 using StocksWebApi.DTOs.Stock;
+using StocksWebApi.Helpers;
 using StocksWebApi.Interfaces;
 using StocksWebApi.Mappers;
 using StocksWebApi.Repository;
@@ -20,9 +21,9 @@ namespace StocksWebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
-            var stocks = await _stock_repo.GetAllAsync();
+            var stocks = await _stock_repo.GetAllAsync(query);
 
             var stockDtos = stocks.Select(stock => stock.ToStockDto()).ToList();
 

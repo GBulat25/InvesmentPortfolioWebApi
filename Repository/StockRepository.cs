@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StocksWebApi.Data;
 using StocksWebApi.DTOs.Stock;
+using StocksWebApi.Helpers;
 using StocksWebApi.Interfaces;
 using StocksWebApi.Mappers;
 using StocksWebApi.Models;
@@ -15,8 +16,18 @@ namespace StocksWebApi.Repository
         {
             _stockDBContext = stockDBContext;
         }
-        public async Task<List<Stock>> GetAllAsync() { 
-            return await _stockDBContext.Stocks.Include(c=>c.Comments).ToListAsync();
+        public async Task<List<Stock>> GetAllAsync(QueryObject query) { 
+            var stocks= _stockDBContext.Stocks.Include(c=>c.Comments).AsQueryable();
+            if (!string.IsNullOrWhiteSpace(query.CompanyName))
+            {
+                stocks=stocks.Where(s=> s.CompanyName.Contains(query.CompanyName));
+            }
+            if (!string.IsNullOrWhiteSpace(query.Symbol))
+            {
+                stocks = stocks.Where(s => s.Symbol.Contains(query.Symbol));
+            }
+            var skipNumber=(query.PageNumber-1)* query.PageSize;
+            return await stocks.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<Stock> CreateAsync(Stock stockModel)
