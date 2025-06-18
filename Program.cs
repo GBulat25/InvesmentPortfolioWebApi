@@ -1,4 +1,4 @@
-using StocksWebApi.Data;
+ using StocksWebApi.Data;
 using Microsoft.EntityFrameworkCore;
 using StocksWebApi.Interfaces;
 using StocksWebApi.Repository;
@@ -6,6 +6,7 @@ using StocksWebApi.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using StocksWebApi.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,7 +59,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-
+builder.Services.AddScoped<ITokenService,TokenService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
