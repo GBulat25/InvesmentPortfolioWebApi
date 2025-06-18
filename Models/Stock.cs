@@ -2,6 +2,7 @@
 
 namespace StocksWebApi.Models
 {
+    [Table("Stocks")]
     public class Stock
     {
         public Guid Id { get; set; }
@@ -11,9 +12,12 @@ namespace StocksWebApi.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
 
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Divs { get; set; }
         public string Industry { get; set; } = string.Empty;
         public long MarketCap { get; set; }
         public List<Comment> Comments { get; set; } = new List<Comment>();
+        public List<Portfolio> Portfolios { get; set; } = new List<Portfolio>();
+
     }
 }
