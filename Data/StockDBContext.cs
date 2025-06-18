@@ -42,6 +42,6 @@ namespace StocksWebApi.Data
                 },
             };
             builder.Entity<IdentityRole>().HasData(roles);
-        } 
+        }
     }
 }

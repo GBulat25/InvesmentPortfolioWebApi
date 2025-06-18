@@ -11,5 +11,7 @@ namespace StocksWebApi.Models
         public DateTime Created { get; set; } = DateTime.Now;
         public Guid? StockId { get; set; }
         public Stock? Stock { get; set; }
+        public string AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }

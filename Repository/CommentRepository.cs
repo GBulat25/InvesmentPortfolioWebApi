@@ -34,12 +34,12 @@ namespace StocksWebApi.Repository
 
         public async Task<List<Comment>> GetAllAsync()
         {
-            return await _stockDBContext.Comments.ToListAsync();
+            return await _stockDBContext.Comments.Include(a=>a.AppUser).ToListAsync();
         }
 
         public async Task<Comment?> GetByIdAsync(Guid id)
         {
-            return await _stockDBContext.Comments
+            return await _stockDBContext.Comments.Include(a => a.AppUser)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
