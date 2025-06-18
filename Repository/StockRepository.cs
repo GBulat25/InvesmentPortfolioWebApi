@@ -76,5 +76,10 @@ namespace StocksWebApi.Repository
         {
             return await _stockDBContext.Stocks.AnyAsync(s=>s.Id==id);
         }
+
+        public async Task<Stock?> GetBySymbolAsync(string symbol)
+        {
+            return await _stockDBContext.Stocks.FirstOrDefaultAsync(s=>s.Symbol==symbol);
+        }
     }
 }

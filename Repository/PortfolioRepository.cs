@@ -12,6 +12,14 @@ namespace StocksWebApi.Repository
         {
             _dbContext = context;
         }
+
+        public async Task<Portfolio> CreateAsync(Portfolio portfolio)
+        {
+            await _dbContext.Portfolios.AddAsync(portfolio);
+            await _dbContext.SaveChangesAsync();
+            return portfolio;
+        }
+
         public async Task<List<Stock>> GetUserPortfolio(AppUser user)
         {
             return await _dbContext.Portfolios.Where(u=> u.AppUserId==user.Id).Select(stock=> new Stock
