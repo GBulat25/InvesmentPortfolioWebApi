@@ -1,0 +1,38 @@
+﻿using StocksWebApi.DTOs.Comment;
+using StocksWebApi.Models;
+
+namespace StocksWebApi.Mappers
+{
+    public static class CommentMappers
+    {
+        public static CommentDTO ToCommentDTO(this Comment commentModel)
+        {
+            return new CommentDTO
+            {
+                Id = commentModel.Id,
+                Title = commentModel.Title,
+                Content = commentModel.Content,
+                Created = commentModel.Created,
+                CreatedBy=commentModel.AppUser.UserName,
+                StockId= commentModel.StockId
+            };
+        }
+        public static Comment ToCommentFromCreate(this CreateCommentDTO commentModel, Guid stockId)
+        {
+            return new Comment
+            {
+                Title = commentModel.Title,
+                Content = commentModel.Content,
+                StockId = stockId
+            };
+        }
+        public static Comment ToCommentFromUpdate(this UpdateCommentReqDTO commentModel)
+        {
+            return new Comment
+            {
+                Title = commentModel.Title,
+                Content = commentModel.Content
+            };
+        }
+    }
+}
