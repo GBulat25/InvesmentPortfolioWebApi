@@ -1,4 +1,4 @@
- using StocksWebApi.Data;
+using StocksWebApi.Data;
 using Microsoft.EntityFrameworkCore;
 using StocksWebApi.Interfaces;
 using StocksWebApi.Repository;
@@ -11,11 +11,13 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Добавление сервисов в контейнер внедрения зависимостей
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddControllers(); // Регистрация контроллеров для API
+builder.Services.AddEndpointsApiExplorer(); // Поддержка генерации OpenAPI документации
+builder.Services.AddSwaggerGen(); // Генерация Swagger документации
+
+// Настройка Swagger для поддержки JWT авторизации
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
@@ -35,33 +37,39 @@ builder.Services.AddSwaggerGen(option =>
             {
                 Reference = new OpenApiReference
                 {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
                 }
             },
-            new string[]{}
+            new string[] { }
         }
     });
 });
 
-builder.Services.AddControllers().AddNewtonsoftJson(options=>{
-    options.SerializerSettings.ReferenceLoopHandling= Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+// Настройка JSON сериализации для игнорирования циклических ссылок
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
 
+// Настройка контекста базы данных с использованием SQL Server
 builder.Services.AddDbContext<StockDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-    });
+});
 
+// Настройка Identity для управления пользователями и ролями
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequiredLength = 12;
+    options.Password.RequireDigit = true; // Пароль должен содержать цифры
+    options.Password.RequireLowercase = true; // Пароль должен содержать строчные буквы
+    options.Password.RequireUppercase = true; // Пароль должен содержать заглавные буквы
+    options.Password.RequireNonAlphanumeric = true; // Пароль должен содержать специальные символы
+    options.Password.RequiredLength = 12; // Минимальная длина пароля
 })
-.AddEntityFrameworkStores<StockDBContext>();
+.AddEntityFrameworkStores<StockDBContext>(); // Использование Entity Framework для хранения данных пользователей
+
+// Настройка аутентификации через JWT
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme =
@@ -74,35 +82,39 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ValidIssuer = builder.Configuration["JWT:Issuer"],
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["JWT:Audience"],
-        ValidateIssuerSigningKey = true,
+        ValidateIssuer = true, // Проверка издателя токена
+        ValidIssuer = builder.Configuration["JWT:Issuer"], // Издатель из конфигурации
+        ValidateAudience = true, // Проверка аудитории токена
+        ValidAudience = builder.Configuration["JWT:Audience"], // Аудитория из конфигурации
+        ValidateIssuerSigningKey = true, // Проверка ключа подписи
         IssuerSigningKey = new SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
+            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]) // Ключ подписи из конфигурации
         )
     };
 });
 
+// Регистрация репозиториев и сервисов
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-builder.Services.AddScoped<ITokenService,TokenService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
+
+// Создание приложения
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Настройка конвейера обработки HTTP-запросов
+
+if (app.Environment.IsDevelopment()) // Включение Swagger только в режиме разработки
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseHttpsRedirection(); // Перенаправление HTTP на HTTPS
 
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseAuthentication(); // Включение аутентификации
+app.UseAuthorization(); // Включение авторизации
 
-app.MapControllers();
+app.MapControllers(); // Маршрутизация к контроллерам
 
-app.Run();
+app.Run(); // Запуск приложения

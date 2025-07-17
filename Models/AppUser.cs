@@ -2,9 +2,16 @@
 
 namespace StocksWebApi.Models
 {
-    public class AppUser:IdentityUser
+    /// <summary>
+    /// Модель пользователя с расширенными данными.
+    /// Наследуется от IdentityUser для поддержки аутентификации и авторизации.
+    /// </summary>
+    public class AppUser : IdentityUser
     {
-        public List<Portfolio> Portfolios { get; set; } = new List<Portfolio>();    
-
+        /// <summary>
+        /// Список портфелей пользователя.
+        /// Каждый пользователь может иметь несколько портфелей.
+        /// </summary>
+        public List<Portfolio> Portfolios { get; set; } = new List<Portfolio>();
     }
 }
