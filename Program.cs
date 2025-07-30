@@ -55,7 +55,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 // Настройка контекста базы данных с использованием SQL Server
 builder.Services.AddDbContext<StockDBContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 // Настройка Identity для управления пользователями и ролями

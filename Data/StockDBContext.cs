@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using StocksWebApi.Models;
+using System.Reflection.Emit;
 using System.Security.Cryptography.X509Certificates;
 
 namespace StocksWebApi.Data
@@ -43,6 +44,10 @@ namespace StocksWebApi.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            // Настройка модели данных
+            builder.Entity<Comment>()
+                .Property(c => c.Created)
+                .HasDefaultValueSql("NOW()"); // Для PostgreSQL
 
             // Настройка составного ключа для Portfolio (AppUserId + StockId)
             builder.Entity<Portfolio>(x => x.HasKey(p => new { p.AppUserId, p.StockId }));
@@ -64,11 +69,13 @@ namespace StocksWebApi.Data
             {
                 new IdentityRole
                 {
+                    Id = "1",
                     Name = "Admin",
                     NormalizedName = "ADMIN"
                 },
                 new IdentityRole
                 {
+                    Id = "2",
                     Name = "User",
                     NormalizedName = "USER"
                 },

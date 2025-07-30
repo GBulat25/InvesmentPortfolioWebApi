@@ -82,7 +82,9 @@ namespace StocksWebApi.Repository
         /// <returns>Обновлённый комментарий или null, если не найден</returns>
         public async Task<Comment?> UpdateAsync(Guid id, Comment commentModel)
         {
-            var existingComment = await _stockDBContext.Comments.FindAsync(id); // Ищем комментарий
+            var existingComment = await _stockDBContext.Comments
+            .Include(c => c.AppUser) // Явная загрузка AppUser
+            .FirstOrDefaultAsync(c => c.Id == id); // Ищем комментарий
             if (existingComment == null)
             {
                 return null; // Возвращаем null, если комментарий не найден

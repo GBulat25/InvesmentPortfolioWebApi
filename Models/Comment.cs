@@ -30,7 +30,7 @@ namespace StocksWebApi.Models
         /// Дата создания комментария.
         /// По умолчанию текущая дата и время.
         /// </summary>
-        public DateTime Created { get; set; } = DateTime.Now;
+        public DateTime Created { get; set; }
 
         /// <summary>
         /// ID акции, к которой относится комментарий (если есть).

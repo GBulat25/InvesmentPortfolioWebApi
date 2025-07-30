@@ -15,13 +15,17 @@ namespace StocksWebApi.Mappers
         /// <returns>DTO комментария</returns>
         public static CommentDTO ToCommentDTO(this Comment commentModel)
         {
+            if (commentModel == null)
+            {
+                throw new ArgumentNullException(nameof(commentModel), "Comment model cannot be null.");
+            }
             return new CommentDTO
             {
                 Id = commentModel.Id,
                 Title = commentModel.Title,
                 Content = commentModel.Content,
                 Created = commentModel.Created,
-                CreatedBy = commentModel.AppUser.UserName, // Имя пользователя, создавшего комментарий
+                CreatedBy = commentModel.AppUser?.UserName ?? "Unknown User", // Имя пользователя, создавшего комментарий
                 StockId = commentModel.StockId // ID акции, к которой относится комментарий
             };
         }
